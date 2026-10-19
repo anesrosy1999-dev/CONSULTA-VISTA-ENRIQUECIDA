@@ -1,0 +1,13 @@
+-- =============================================================================
+-- Consulta: Ventas de los últimos 30 días a partir de la última fecha registrada
+-- =============================================================================
+SELECT 
+    c.nombre AS nombre_cliente,
+    v.fecha_venta,
+    (v.cantidad * v.precio_unitario) AS total_venta
+FROM ventas v
+INNER JOIN clientes c ON v.id_cliente = c.id_cliente
+WHERE v.fecha_venta >= (
+    SELECT DATE_SUB(MAX(fecha_venta), INTERVAL 30 DAY) FROM ventas
+)
+ORDER BY v.fecha_venta DESC;
